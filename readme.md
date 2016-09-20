@@ -13,9 +13,9 @@ css entries.
 
 ## CSS SETTINGS:
 Now using bootstraps pagination css
-`.nav aria-label="Page navigation"` - The div container
-`.pagingTabsTotals` - The totals
-`.pagination` - The carrousel
+- `.nav aria-label="Page navigation"` - The div container
+- `.pagingTabsTotals` - The totals
+- `.pagination` - The carrousel
 
 ## Usage
 
@@ -31,8 +31,9 @@ prc.boundaries = pagingServince.getBoundaries();
 ```
 
 Gives you a struct:
-`[startrow]` : the startrow to use
-`[maxrow]` : the max row in this recordset to use.
+- `[startrow]` : the startrow to use
+- `[maxrow]` : the max row in this recordset to use.
+
 Ex: [startrow=11][maxrow=20] if we are using a PagingMaxRows of 10
 
 `FoundRows` = The total rows found in the recordset
