@@ -30,13 +30,13 @@ property name="pagingService" inject="PagingService@cbpagination";
 prc.boundaries = pagingServince.getBoundaries();
 ```
 
-Gives you a struct:
-- `[startrow]` : the startrow to use
-- `[maxrow]` : the max row in this recordset to use. Ex: [startrow=11][maxrow=20] if we are using a PagingMaxRows of 10
+Gives you a struct with the following keys:
+- `startrow` : the startrow to use
+- `maxrow` : the max row in this recordset to use. Ex: [startrow=11][maxrow=20] if we are using a PagingMaxRows of 10
 - `FoundRows` = The total rows found in the recordset
 - `link` = The link to use for paging, including a placeholder for the page `@page@` (`index.cfm?event=users.list&page=@page@`)
 
-To RENDER the paging carousel:
+To render the paging carousel:
 Get an instance of the paging model:  
 
 ```
