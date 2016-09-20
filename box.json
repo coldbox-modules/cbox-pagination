@@ -1,0 +1,19 @@
+{
+    "name":"ColdBox Pagination",
+    "version":"0.0.0",
+    "author":"Ortus Solutions",
+    "location":"coldbox-modules/cbox-pagination#v1.0.0",
+    "homepage":"https://github.com/coldbox-modules/cbox-pagination",
+    "documentation":"https://github.com/coldbox-modules/cbox-pagination/",
+    "repository":{
+        "type":"Git",
+        "URL":"git@github.com:coldbox-modules/cbox-pagination.git"
+    },
+    "bugs":"https://github.com/coldbox-modules/cbox-pagination/issues",
+    "slug":"cbpagination",
+    "shortDescription":"This library is for easily creating paginated screens in a ColdBox app.",
+    "type":"modules",
+    "contributors":[
+        "Robert Cruz"
+    ]
+}
