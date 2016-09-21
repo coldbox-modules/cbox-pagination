@@ -16,7 +16,7 @@ component output="false"  {
 	property name="PagingBandGap" inject="coldbox:setting:PagingBandGap";
 	//Constructor
 
-	public pagingService function init(){
+	function init(){
 		return this;
 	}
 
