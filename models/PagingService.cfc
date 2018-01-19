@@ -48,7 +48,7 @@ component output="false"  {
 			return boundaries;
 	}
 	
-	any function renderit (FoundRows,link,page,pagingMaxRows) {
+	any function renderit (FoundRows,link,page,pagingMaxRows,pagingBandGap) {
 		
 		var pagingTabs = "";
 		var maxRows = getPagingMaxRows(pagingMaxRows);
@@ -61,6 +61,10 @@ component output="false"  {
 		var pageTo = 0;
 		var pageIndex = 0;
 		
+		/* Check for Override need to come back to this */
+		if( structKeyExists(arguments,"PagingBandGap") ){
+			bandGap = arguments.pagingBandGap;
+		}
 		if ( arguments.foundRows neq 0 ) {
 			totalPages = ceiling( arguments.FoundRows / maxRows );
 		}
@@ -72,23 +76,36 @@ component output="false"  {
 			//start the pagination carousel
 			writeOutput( '<ul class="pagination">' );
 			// PREVIOUS PAGE --->
-			if ( currentPage-1 gt 0 ) {
+			if ( currentPage gt 1 ) {
 				writeOutput( '<li><a href="#replace(theLink,"@page@",1)#" aria-label="first"><span aria-hidden="true">&laquo;&laquo;</span></a></li>' );
 				writeOutput( '<li><a href="#replace(theLink,"@page@",currentPage-1)#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>' );
 			} else {
 				writeOutput ( '<li><span aria-hidden="true">&laquo;&laquo;</span></li><li><span aria-hidden="true">&laquo;</span></li>' );
 			}
-			// Calcualte PageFrom Carrousel --->
-			pageFrom=1;
-			
-			if ( (currentPage-bandGap) gt 1 ) {
-				pageFrom = currentPage-bandGap;
-				writeOutput( '<li><a href="#replace(theLink,"@page@",1)#">1</a></li>' );
+
+			// Calcualte pageFrom of Carrousel if GT bandGap
+			if ( totalPages GT bandGap ) {
+				// Find middle of bandGap to center
+				// Subtract .01 to set left of center for even bandGap
+				middle = int( (bandGap / 2) - .01 );
+				// Check if pageFrom LT 1
+				if ( (currentPage - middle) GT 1 ) { 
+					pageFrom = currentPage-middle;
+					// Keep pageFrom a minimum of bandGap
+					if ( (pageFrom + bandgap - 1) GT totalPages ) {
+						pageFrom = totalPages - bandGap + 1;
+					}
+				} else {
+					pageFrom = 1;
+				}
+			} else {
+				pageFrom=1;
 			}
-			// Page TO of Carrousel --->
-			pageTo = (currentPage+bandGap);
-			
-			if ( ( currentPage + bandGap ) gt totalPages ) {
+
+			// Calculate pageTo of Carrousel if LTE totalPages
+			if ( ( pageFrom + bandGap - 1 ) lte totalPages ) {
+				pageTo = (pageFrom+bandGap-1);
+			} else {
 				pageTo = totalPages;
 			}
 			
@@ -107,11 +124,6 @@ component output="false"  {
 					pageStatusClass = "";
 				}
 
-			// End Token --->
-			if ( ( currentPage + bandGap ) lt totalPages ) {
-				writeOutput( '<li><a href="#replace(theLink,"@page@",totalPages)#">' & #totalPages# & '</a></li>' );
-			}
-			
 			// NEXT PAGE --->
 			if ( currentPage lt totalPages ) {
 				writeOutput ( '<li><a href="#replace(theLink,"@page@",currentPage+1)#" aria-hidden="true"><span aria-hidden="true">&raquo;</span></a></li>' );
