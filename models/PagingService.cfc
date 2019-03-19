@@ -72,40 +72,27 @@ component output="false"  {
 		savecontent variable="pagingtabs" {
 			writeOutput( '<nav aria-label="Page navigation">' );
 			// output paging totals
-			writeOutput( '<div class="pagingTabsTotals"><strong>Total Records: </strong>' & #arguments.FoundRows# &'&nbsp;&nbsp;' & '<strong>Total Pages: </strong>' & #totalPages# & '</div>');
+			writeOutput( '<div class="pagingTabsTotals"><strong>Total Records: </strong>' & #numberFormat(arguments.FoundRows, ",___")# &'&nbsp;&nbsp;' & '<strong>Total Pages: </strong>' & #numberFormat(totalPages, ",___")# & '</div>');
 			//start the pagination carousel
 			writeOutput( '<ul class="pagination">' );
 			// PREVIOUS PAGE --->
-			if ( currentPage gt 1 ) {
-				writeOutput( '<li><a href="#replace(theLink,"@page@",1)#" aria-label="first"><span aria-hidden="true">&laquo;&laquo;</span></a></li>' );
-				writeOutput( '<li><a href="#replace(theLink,"@page@",currentPage-1)#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>' );
+			if ( currentPage-1 gt 0 ) {
+				writeOutput( '<li class="page-item"><a class="page-link" href="#replace(theLink,"@page@",1)#" aria-label="first"><span aria-hidden="true">&laquo;&laquo;</span></a></li>' );
+				writeOutput( '<li class="page-item"><a class="page-link" href="#replace(theLink,"@page@",currentPage-1)#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>' );
 			} else {
-				writeOutput ( '<li><span aria-hidden="true">&laquo;&laquo;</span></li><li><span aria-hidden="true">&laquo;</span></li>' );
+				writeOutput ( '<li class="page-item disabled"><span aria-hidden="true" class="page-link">&laquo;&laquo;</span></li><li class="page-item disabled"><span aria-hidden="true" class="page-link">&laquo;</span></li>' );
 			}
-
-			// Calcualte pageFrom of Carrousel if GT bandGap
-			if ( totalPages GT bandGap ) {
-				// Find middle of bandGap to center
-				// Subtract .01 to set left of center for even bandGap
-				middle = int( (bandGap / 2) - .01 );
-				// Check if pageFrom LT 1
-				if ( (currentPage - middle) GT 1 ) { 
-					pageFrom = currentPage-middle;
-					// Keep pageFrom a minimum of bandGap
-					if ( (pageFrom + bandgap - 1) GT totalPages ) {
-						pageFrom = totalPages - bandGap + 1;
-					}
-				} else {
-					pageFrom = 1;
-				}
-			} else {
-				pageFrom=1;
+			// Calcualte PageFrom Carrousel --->
+			pageFrom=1;
+			
+			if ( (currentPage-bandGap) gt 1 ) {
+				pageFrom = currentPage-bandGap;
+				writeOutput( '<li class="page-item"><a class="page-link" href="#replace(theLink,"@page@",1)#">1</a></li>' );
 			}
-
-			// Calculate pageTo of Carrousel if LTE totalPages
-			if ( ( pageFrom + bandGap - 1 ) lte totalPages ) {
-				pageTo = (pageFrom+bandGap-1);
-			} else {
+			// Page TO of Carrousel --->
+			pageTo = (currentPage+bandGap);
+			
+			if ( ( currentPage + bandGap ) gt totalPages ) {
 				pageTo = totalPages;
 			}
 			
@@ -118,19 +105,24 @@ component output="false"  {
 				)
 				{
 					if ( currentPage eq pageIndex ) {
-						pageStatusClass='class="active"';
+						pageStatusClass='class="active page-item"';
 					}
-					writeOutPut ( '<li #pageStatusClass#><a href="#replace(theLink,"@page@",pageIndex)#"' & '>' & #pageIndex# & '</a></li>');	
+					writeOutPut ( '<li #pageStatusClass#><a class="page-link" href="#replace(theLink,"@page@",pageIndex)#"' & '>' & #numberFormat(pageIndex, ",___")# & '</a></li>');	
 					pageStatusClass = "";
 				}
 
+			// End Token --->
+			if ( ( currentPage + bandGap ) lt totalPages ) {
+				writeOutput( '<li class="page-item"><a class="page-link" href="#replace(theLink,"@page@",totalPages)#">' & #numberFormat(totalPages, ",___")# & '</a></li>' );
+			}
+			
 			// NEXT PAGE --->
 			if ( currentPage lt totalPages ) {
-				writeOutput ( '<li><a href="#replace(theLink,"@page@",currentPage+1)#" aria-hidden="true"><span aria-hidden="true">&raquo;</span></a></li>' );
-				writeOutput ( '<li><a href="#replace(theLink,"@page@",totalPages)#" aria-hidden="true"><span aria-hidden="true">&raquo;&raquo;</span></a></li>' );
+				writeOutput ( '<li class="page-item"><a class="page-link" href="#replace(theLink,"@page@",currentPage+1)#" aria-hidden="true"><span aria-hidden="true">&raquo;</span></a></li>' );
+				writeOutput ( '<li class="page-item"><a class="page-link" href="#replace(theLink,"@page@",totalPages)#" aria-hidden="true"><span aria-hidden="true">&raquo;&raquo;</span></a></li>' );
 			} else {
-				writeOutput ( '<li><span aria-hidden="true">&raquo;</span></li>' );
-				writeOutput ( '<li><span aria-hidden="true">&raquo;&raquo;</span></li>' )
+				writeOutput ( '<li class="page-item disabled"><span aria-hidden="true" class="page-link">&raquo;</span></li>' );
+				writeOutput ( '<li class="page-item disabled"><span aria-hidden="true" class="page-link">&raquo;&raquo;</span></li>' )
 			}
 
 			writeOutPut( '</ul>' );
